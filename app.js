@@ -1,16 +1,33 @@
 import express from 'express';
 import ejs from 'ejs';
+import Photo from './models/Photo.js';
+import mongoose from 'mongoose';
 
 const port = 3000;
 
 const app = express();
 
+//Connect DB
+
+mongoose.connect('mongodb://localhost/pcat-test-db');
+
+//Template Engine
+
 app.set('view engine', 'ejs');
 
-app.use(express.static('public'));
+//Middlewares
 
-app.get('/', (req, res) => {
-  res.render('index');
+app.use(express.static('public'));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+//Routes
+
+app.get('/', async (req, res) => {
+  const photos = await Photo.find({});
+  res.render('index', {
+    photos,
+  });
 });
 
 app.get('/about', (req, res) => {
@@ -19,6 +36,12 @@ app.get('/about', (req, res) => {
 
 app.get('/add', (req, res) => {
   res.render('add');
+});
+
+app.post('/photos', async (req, res) => {
+  await Photo.create(req.body);
+  //console.log(req.body);
+  res.redirect('/');
 });
 
 app.listen(port, () => {
