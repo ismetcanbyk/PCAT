@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import fileUpload from 'express-fileupload';
 import fs from 'fs';
 import path from 'path';
+import methodOverride from 'method-override';
 import { fileURLToPath } from 'url';
 import Photo from './models/Photo.js';
 
@@ -26,6 +27,12 @@ app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(fileUpload());
+app.use(
+  methodOverride('_method', {
+    methods: ['POST', 'GET'],
+  })
+);
+
 //Routes
 
 app.get('/', async (req, res) => {
@@ -73,6 +80,31 @@ app.post('/photos', async (req, res) => {
     });
     res.redirect('/');
   });
+});
+
+app.get('/photos/edit/:id', async (req, res) => {
+  const photo = await Photo.findOne({ _id: req.params.id });
+  res.render('edit', {
+    photo,
+  });
+});
+
+app.put('/photos/:id', async (req, res) => {
+  const photo = await Photo.findOne({ _id: req.params.id });
+  photo.title = req.body.title;
+  photo.description = req.body.description;
+  photo.save();
+  res.redirect(`/photos/${req.params.id}`);
+});
+
+app.delete('/photos/:id', async (req, res) => {
+  const photo = await Photo.findOne({ _id: req.params.id });
+  let deletedImg = __dirname + '/public' + photo.image;
+  if (fs.existsSync(deletedImg)) {
+    fs.unlinkSync(deletedImg);
+  }
+  await photo.delete();
+  res.redirect('/');
 });
 
 app.listen(port, () => {
