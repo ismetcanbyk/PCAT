@@ -23,8 +23,7 @@
   },
   "homepage": "https://github.com/ismetcanbyk/PCAT#readme",
   "devDependencies": {
-    "nodemon": "^2.0.20",
-    "prettier": "2.8.3"
+    "nodemon": "^2.0.20"
   },
   "dependencies": {
     "ejs": "^3.1.8",
