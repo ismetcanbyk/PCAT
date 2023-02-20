@@ -5,8 +5,8 @@ import * as photoController from '../controllers/photoController.js'
 const router = express.Router();
 
 router
-.route('/')
-.post(photoController.uploadPhoto)
+    .route('/')
+    .post(photoController.uploadPhoto)
 
 
 
