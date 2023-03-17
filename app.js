@@ -37,5 +37,5 @@ app.use('/photos', photoRoute);
 
 
 app.listen(port, () => {
-  console.log(`Sunucu ${port} de çalışıyor.`);
+  console.log(`App started on port ${port}.`);
 });
